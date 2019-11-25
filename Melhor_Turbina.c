@@ -12,7 +12,7 @@ void Teste_diametro(float*);
 a melhor turbina com os devidos calculos e criterios de avaliação.
 */
 float main(){
-    float dados[20]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    float dados[20]={0,0,0,0,0,0,0,0,0,0,0,0,0};
     char *nomes[20]={"altura(h)","potencia","rotacao_especifica","rpm(n)","vazao(q)","diametro(d)","gravidade(g)","rho","psi","delta","Diamemetro_especifico","Diametro_adequado","omega"};
     //EX1
     Pega_valores(dados);
@@ -25,7 +25,7 @@ float main(){
     //EX5 opcional, diagrama de rendimento.
 
     //printar tudo
-    for(int i =0;i<20;i++){
+    for(int i =0;i<13;i++){
         printf("\n%s:%f\n",nomes[i],dados[i]);
     }
 }
