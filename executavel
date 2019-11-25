@@ -1,0 +1,5 @@
+#!/bin/bash
+
+gcc Melhor_Turbina.c -lm -o turbinas
+echo -e "Arquivo compilado, nome : turbinas (SO-Linux)."
+./turbinas

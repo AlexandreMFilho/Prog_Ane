@@ -1,33 +1,36 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include<stdlib.h>
 
 float Rotacao_esp(float*);
 void Pega_valores(float*);
-void Tipo_turbina(float*);
-void Teste_velocidade(float*);
-void Teste_diametro(float*);
+void Tipo_turbina(float*,char**);
+void Teste_velocidade(float*,char**);
+void Teste_diametro(float*,char**);
 
 /*Este programa deverá receber uma quantidade N de turbinas e solicitados os dados, no fim ele deverá informar
 a melhor turbina com os devidos calculos e criterios de avaliação.
 */
 float main(){
     float dados[20]={0,0,0,0,0,0,0,0,0,0,0,0,0};
-    char *nomes[20]={"altura(h)","potencia","rotacao_especifica","rpm(n)","vazao(q)","diametro(d)","gravidade(g)","rho","psi","delta","Diamemetro_especifico","Diametro_adequado","omega"};
-    //EX1
+    char *nomes[20]={"Altura: ","Potencia: ","Rotacao especifica: ","Rpm: ","Vazao: ","Diametro: ","Gravidade: ","Rho: ","Psi: ","Delta: ","Diamemetro especifico: ","Diametro adequado: ","Omega: "};
+    char *resp[10];
+    system("clear");
     Pega_valores(dados);
-    Tipo_turbina(dados);
-    //Ex2 implementar um diagrama...
-    //EX3
-    Teste_velocidade(dados);
-    //EX4 diametro especifico
-    Teste_diametro(dados);
-    //EX5 opcional, diagrama de rendimento.
-
-    //printar tudo
-    for(int i =0;i<13;i++){
-        printf("\n%s:%f\n",nomes[i],dados[i]);
+    Tipo_turbina(dados,resp);
+    Teste_velocidade(dados,resp);
+    Teste_diametro(dados,resp);
+    system("clear");
+    printf("-------------Dados-------------\n");
+    for(int i=0;i<13;i++){
+        printf("%s%f\n",nomes[i],dados[i]);
     }
+    printf("-------------------------------\n");
+    for(int i=0;i<3;i++){
+        printf("%s",resp[i]);
+    }
+    printf("\n");
 }
 
 void Pega_valores(float *data){
@@ -49,9 +52,9 @@ float Rotacao_esp(float* dados){
         return nq;
     }
     if(aux == 2.0){
-        printf("Digite n:\n");
+        printf("Digite a rotacao em rpm:\n");
         scanf("%f",&n);
-        printf("Digite Q:\n");
+        printf("Digite a vazao:\n");
         scanf("%f",&q);
         dados[3]=n;
         dados[4]=q;
@@ -62,34 +65,34 @@ float Rotacao_esp(float* dados){
     }
 }
 
-void Tipo_turbina(float* dados){
+void Tipo_turbina(float* dados,char** resp){
     if(dados[2] <= 20 && dados[0] <=1767 && dados[1]<=22.8){                                //pelton
-        printf("A melhor turbina é Pelton.\n");
+        resp[0]= "Pela tabela de comparacao a melhor turbina é Pelton.\n";
     }else if((dados[2]>20&&dados[2]<100)&&(dados[0]>=45&&dados[0]<750)&&(dados[1]<=825)){      //Francis
-        printf("A melhor turbina é Francis.\n");
+        resp[0]= "Pela tabela de comparacao a melhor turbina é Francis.\n";
     }else if((dados[2]>95&&dados[2]<310)&&(dados[0]>2&&dados[0]<=60)&&(dados[1]<=75)){         //Keplan
-        printf("A melhor turbina é Keplan.\n");
+        resp[0]= "Pela tabela de comparacao a melhor turbina é Keplan.\n";
     }
 }
-void Teste_velocidade(float* dados){
+void Teste_velocidade(float* dados,char**resp){
     float rho,psi,delta,omega,q,d,n,g,h;
     if(dados[4] == 0){
-        printf("Digite Q:\n");
+        printf("Digite a vazao:\n");
         scanf("%f",&q);
         dados[4]=q;
     }
-    if(dados[3]==0){
-        printf("Digite n:\n");
+        if(dados[3]==0){
+        printf("Digite a rotacao em rpm:\n");
         scanf("%f",&n);
         dados[3]=n;
     }
     if(dados[5]==0){
-        printf("Digite D:\n");
+        printf("Digite o diametro:\n");
         scanf("%f",&d);
         dados[5]=d;
     }
     if(dados[6]==0){
-        printf("Digite G:\n");
+        printf("Digite a gravidade:\n");
         scanf("%f",&g);
         dados[6]=g;
     }
@@ -101,13 +104,22 @@ void Teste_velocidade(float* dados){
     dados[8]=psi;
     dados[9]=delta;
     dados[12]=omega;
+    if(omega <0.15){    //Pelton
+        resp[1]= "A melhor turbina é Pelton de acordo com a velocidade especifica.\n";
+    }else if(omega>0.28&&omega<2.1){   //Francis
+        resp[1]= "A melhor turbina é Francis de acordo com a velocidade especifica.\n";
+    }else if(omega>2.3&&omega<5.1){     //Keplan
+        resp[1]= "A melhor turbina é Keplan de acordo com a velocidade especifica.\n";
+    }else{
+        resp[1]= "De acordo com a velocidade especifica essa turbina nao ira funcionar.\n";
+    }
 }
-//     0            1           2                3          4           5           6             7     8      9        10                      11                 12
-//"altura(h)","potencia","rotacao_especifica","rpm(n)","vazao(q)","diametro(d)","gravidade(g)","rho","psi","delta","Diamemetro_especifico","Diametro_adequado","omega"
-void Teste_diametro(float* dados){
+void Teste_diametro(float* dados,char**resp){
     float dq = 0,da=0;
+    int n;
     dq = (dados[5]*pow(dados[6]*dados[0],0.25))/sqrt(dados[4]);
     dados[10]=dq;
     da = (4*dados[10]*sqrt(dados[4]))/(pow(3.14,2)*pow(dados[6]*dados[0],0.25));
     dados[11]=da;
+    n=sprintf(resp[2],"O Diametro adequado eh %f.\n",da);
 }
